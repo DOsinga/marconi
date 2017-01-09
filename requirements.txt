@@ -1,0 +1,4 @@
+requests==2.11.1
+spotipy==2.3.8
+Cython==0.24.1
+gensim==0.13.2
