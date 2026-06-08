@@ -1,0 +1,70 @@
+<script type="text/markdown" id="info">
+name: Marconi
+description: >
+  An implementation of a Spotify-like song radio based on Word2Vec. Based on a large set of crawled playlists and using those playlists as sentence equivalents. The Word2Vec algorithm then produces a vector per song.
+type: ai
+github: marconi
+</script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+
+<script type="text/javascript">
+  $(function() {
+    $("#song1").autocomplete({
+      source: "/projects/marconi/autocomplete",
+      select: function(event, ui) {
+        $('#song1_id').val(ui.item.value);
+        event.preventDefault();
+        $("#song1").val(ui.item.label);
+      },
+      minLength: 2
+    });
+    $("#song2").autocomplete({
+      source: "/projects/marconi/autocomplete",
+      select: function(event, ui) {
+        $('#song2_id').val(ui.item.value);
+        event.preventDefault();
+        $("#song2").val(ui.item.label);
+      },
+      minLength: 2
+    });
+
+    $("#song2").change(function () {
+        if ($("#song2").val() == '') {
+            $("#song2_id").val('');
+        }
+    })
+  });
+
+</script>
+
+<P>
+    Try it out below:
+</P>
+
+<form method="get">
+<label>Pick a song:
+    <input value="{{ song1 }}" id="song1">
+    <input name="song1_id" value="{{ song1_id }}" id="song1_id" type="hidden">
+</label>
+<label>(Optional) second song:
+    <input value="{{ song2 }}" id="song2">
+    <input name="song2_id" value="{{ song2_id }}" id="song2_id" type="hidden">
+</label>
+    <input type="submit" value="start radio">
+</form>
+
+<br/>
+
+{% if song1_id %}
+<iframe src="https://embed.spotify.com/?uri=spotify:trackset:{{ song1 }}:{{ song_ids }}" frameborder="0" allowtransparency="true" height="400"></iframe>
+{% endif %}
+
+<P>
+    The Word2Vec approach over crawled playlists results in assigning a 100 dimensional vector to each song in the
+    database. Currently there are only 300 000 songs - finding enough playlists if you are not Spotify is hard. When
+    one song is entered, we just find the songs closest to that vector. If there are two songs entered, we find the
+    mid-point and use that to find closest neighbors.
+</P>
