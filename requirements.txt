@@ -1,4 +1,4 @@
 requests==2.20.0
-spotipy==2.3.8
+spotipy==2.22.1
 Cython==0.24.1
 gensim==0.13.2
